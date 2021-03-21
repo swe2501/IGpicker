@@ -1,0 +1,120 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+		<div class="instaQueryForm">
+			<table id="queryTable" border="0" width="600px"
+				style="margin: auto; text-align: center; display: 'none'">
+
+				<caption>Instagram Picker</caption>
+	
+				<tr>
+					<td></td>
+					<td></td>
+				</tr>
+	
+				<tr>
+					<th><p class="subTitle">貼文網址</p></th>
+					<td><input class="textinput" id="url"
+						placeholder="ex. https://www.instagram.com/p/B-ZEuJypDtG/" />
+					</td>
+				</tr>
+	
+					<!--
+				<tr>
+				<th>標記人數</th>
+				<td>
+					<select class="select tag" id = "tag">
+					<option>0</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					</select>
+				</td>
+				</tr>
+	
+				<tr style="display: 'none''">
+				<th>指定留言內容</th>
+				<td>
+					<input class="textinput keyword" id="keyword" />
+				</td>
+				</tr>
+				-->
+	
+	
+				<tr>
+					<th><p class="subTitle">可以重複留言</p></th>
+					<td><input class="check repeat" id="repeat" type="checkbox" /></td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="instaQueryForm2">
+
+			<table id="queryTable2" border="1" width="600px"
+				style="margin: auto; text-align: center; display: 'none'">
+				<thead>
+					<tr>
+						<td><p class="subTitle">獎品</p></td>
+						<td><p class="subTitle">抽獎人數</p></td>
+						<td><input type="button" value="Add" onclick="add()">
+						</td>
+					</tr>
+				<thead>
+				<tbody id="tb">
+	
+					<tr id="1st">
+						<td><input class="textinput reward" id="reward" /></td>
+						<td>
+							<!--
+					<input class="textinput count" id="count" value="1" />
+				  --> <select class="select count" id="count">
+								<option>1</option>
+								<option>2</option>
+								<option>3</option>
+								<option>4</option>
+								<option>5</option>
+								<option>6</option>
+								<option>7</option>
+								<option>8</option>
+								<option>9</option>
+								<option>10</option>
+						</select>
+						</td>
+	
+						<td><input type="button" value="Del" onclick="del(this)">
+						</td>
+	
+					</tr>
+				</tbody>
+	
+				<thead>
+					<tr>
+						<td colspan="1">
+							<!--
+								<button id="cheat_btn" value="~" onclick="appearOrNot()">
+									<p>確認</p>
+								</button>
+							-->
+							
+						</td>
+						<td colspan="2">
+							<button id="btn1" onclick="sendFun()">
+								<p>抽獎</p>
+							</button>
+						</td>
+					</tr>
+				<thead>
+			</table>
+	
+		</div>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<title>Instagram Picker</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+		<div id="div0"></div>
+		<div class="cheatForm">
+			<table border="1" id="cheatTable" width="600px"
+				style="margin: auto; text-align: center; display: ''">
+				<caption>內定人選 (超過留空)</caption>
+	
+				<thead>
+					<tr>
+						<td>獎品(需與抽獎表單字相同)</td>
+						<td>內定人帳號(帳號不包含@)</td>
+					</tr>
+				<thead>
+				<tbody id="tb2">
+	
+					<tr id="1st">
+						<td><input class="cheat reward" id="cheat_reward" /></td>
+						<td><input class="cheat name" id="cheat_name" /></td>
+					</tr>
+					<tr id="2st">
+						<td><input class="cheat reward" id="cheat_reward" /></td>
+						<td><input class="cheat name" id="cheat_name" /></td>
+					</tr>
+					<tr id="3st">
+						<td><input class="cheat reward" id="cheat_reward" /></td>
+						<td><input class="cheat name" id="cheat_name" /></td>
+					</tr>
+					<tr id="4st">
+						<td><input class="cheat reward" id="cheat_reward" /></td>
+						<td><input class="cheat name" id="cheat_name" /></td>
+					</tr>
+					<tr id="5st">
+						<td><input class="cheat reward" id="cheat_reward" /></td>
+						<td><input class="cheat name" id="cheat_name" /></td>
+					</tr>
+					<tr id="6st">
+						<td></td>
+						<td>
+							<button id="set_cheat_btn" onclick="setCheat()">
+								<p>送出內定名單
+								<p>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+		</div>
+
+			<script>
+				var cheatList = new Array();
+
+				// 設定內定人選
+				function setCheat() {
+					document.getElementById("cheatTable").style.display = 'none';
+
+					var tab = document.getElementById("tb2");
+					var rows = tab.rows;
+					for (var i = 0; i < rows.length - 1; i++) {
+						var reward = rows[i].cells[0].children[0].value.trim();
+						var name = rows[i].cells[1].children[0].value.trim();
+						var cheatData = {
+							CHEAT_REWARD : reward,
+							CHEAT_NAME : name
+						}
+						if (reward.length != 0 && name.length != 0) {
+							cheatList.push(cheatData);
+						}
+					}
+					alert("內定共: " + cheatList.length);
+					console.log("cheatList: ", cheatList);
+
+					var request = $.ajax({
+						type : "POST",
+						url : "/cheat",
+						data : "",
+						contentType : "application/json; charset=UTF-8",
+					}).done(function(data) {
+						alert("success");
+						$("#div0").html(data);
+					}).fail(function() {
+						alert("error");
+					});
+				}
+
+				// 增加獎品欄位
+				function add() {
+					var trObj = document.createElement("tr");
+					trObj.id = new Date().getTime();
+					trObj.innerHTML = "<td><input id='reward' value=''/></td><td>"
+							+ "<select class='select count' id = 'count'>"
+							+ "<option>1</option>"
+							+ "<option>2</option>"
+							+ "<option>3</option>"
+							+ "<option>4</option>"
+							+ "<option>5</option>"
+							+ "<option>6</option>"
+							+ "<option>7</option>"
+							+ "<option>8</option>"
+							+ "<option>9</option>"
+							+ "<option>10</option>"
+							+ "</select>"
+							+ "</td><td><input type='button' value='Del' onclick='del(this)'></td>";
+					document.getElementById("tb").appendChild(trObj);
+				}
+				// 刪除當前獎品欄位
+				function del(obj) {
+					var trId = obj.parentNode.parentNode.id;
+					var trObj = document.getElementById(trId);
+					document.getElementById("tb").removeChild(trObj);
+				}
+
+				// function load(){
+				//   var tab=document.getElementById("tb");
+				//   var rows=tab.rows;
+				//   alert("獎項共: " + rows.length);
+				//   for(var i=0;i<rows.length;i++)
+				//   {
+				//     for(var j=0;j<2;j++)
+				//     {
+				//       alert("第"+(i+1)+"行，第"+(j+1)+"列的值是:"+rows[i].cells[j].children[0].value);
+				//     }
+				//   }
+				// }
+
+				function getRewards() {
+					var rewards = new Array();
+					var tab = document.getElementById("tb");
+					var rows = tab.rows;
+					alert("獎項共: " + rows.length);
+					for (var i = 0; i < rows.length; i++) {
+						var rewardData = {
+							REWARD : rows[i].cells[0].children[0].value,
+							COUNT : rows[i].cells[1].children[0].value
+						}
+						rewards.push(rewardData);
+					}
+					console.log("rewards； , rewards");
+					return rewards;
+				}
+
+				// 送出 抽獎
+				function sendFun() {
+					console.log("sendFun()");
+
+					var url = document.getElementById("url").value;
+					// var tag = document.getElementById("tag").value;
+					//var keyword = document.getElementById("keyword").value;
+					var tag = "0";
+					var keyword = "";
+					var repeat = document.getElementById("repeat").checked ? "1"
+							: "0";
+					var rewards = getRewards();
+
+					var data = {
+						URL : url,
+						TAG : tag,
+						KEYWORD : keyword,
+						REPEAT : repeat,
+						REWARDS : rewards,
+						CHEAT_LIST : cheatList
+					};
+
+					console.log("before Send data", data);
+					console.log(JSON.stringify(data));
+
+					var request = $.ajax({
+						type : "POST",
+						url : "/send",
+						data : JSON.stringify(data),
+						contentType : "application/json; charset=UTF-8",
+					}).done(function(data) {
+						alert("success");
+						$("#div1").html(data);
+					}).fail(function() {
+						alert("error");
+					});
+					// .always(function () {
+					//   alert("complete");
+					// });
+				}
+
+				//   $.post(
+				//     "IndexServlet",
+				//     {
+				//       type: "step1",
+				//       data: JSON.stringify(data),
+				//     },
+				//     function (data) {
+				//       $("#div2").html(data);
+				//     }
+				//   );
+				// }
+			</script>
+
+			<div id="div1"></div>
+			<div id="div2"></div>
+			<div id="div3"></div>
+			<div id="div4"></div>
+</body>
+</html>
